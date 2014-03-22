@@ -5,18 +5,17 @@ describe 'Kaminari::Helpers' do
   describe '#page_url_for' do
     before do
       helper.params.merge!(:controller => 'users', :action => 'index')
+      Kaminari.config.skip_first_page_param = true
     end
 
     context 'for first page' do
       subject { Tag.new(helper).page_url_for(1) }
       it { should_not match(/page=1/) }
 
-      context 'when skip_first_page_param is set to true' do
-        before do
-          Kaminari.config.skip_first_page_param = false
-        end
-
+      context 'when skip_first_page_param is set to false' do
+        before { Kaminari.config.skip_first_page_param = false }
         it { should match(/page=1/) }
+        after { Kaminari.config.skip_first_page_param = true }
       end
     end
 
