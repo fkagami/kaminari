@@ -2,6 +2,30 @@ require 'spec_helper'
 include Kaminari::Helpers
 
 describe 'Kaminari::Helpers' do
+  describe '#page_url_for' do
+    before do
+      helper.params.merge!(:controller => 'users', :action => 'index')
+    end
+
+    context 'for first page' do
+      subject { Tag.new(helper).page_url_for(1) }
+      it { should_not match(/page=1/) }
+
+      context 'when skip_first_page_param is set to true' do
+        before do
+          Kaminari.config.skip_first_page_param = false
+        end
+
+        it { should match(/page=1/) }
+      end
+    end
+
+    context 'for other pages' do
+      subject { Tag.new(helper).page_url_for(2) }
+      it { should match(/page=2/) }
+    end
+  end
+
   describe 'Paginator' do
     describe 'Paginator::PageProxy' do
       describe '#current?' do

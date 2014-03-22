@@ -27,7 +27,7 @@ module Kaminari
       end
 
       def page_url_for(page)
-        @template.url_for @params.merge(@param_name => (page <= 1 ? nil : page), :only_path => true)
+        @template.url_for @params.merge(@param_name => (Kaminari.config.skip_first_page_param && page <= 1 ? nil : page), :only_path => true)
       end
     end
 
