@@ -49,8 +49,8 @@ module Kaminari
       def each_relevant_page
         return to_enum(:each_relevant_page) unless block_given?
 
-        relevant_pages(@window_options).each do |i|
-          yield PageProxy.new(@window_options, i, @last)
+        relevant_pages(@window_options).each do |page|
+          yield PageProxy.new(@window_options, page, @last)
         end
       end
       alias each_page each_relevant_page
@@ -163,6 +163,11 @@ module Kaminari
         # inside the inner window or not
         def inside_window?
           (@options[:current_page] - @page).abs <= @options[:window]
+        end
+
+        def single_gap?
+          (@page.to_i == @options[:current_page] - @options[:window] - 1) && (@page.to_i == @options[:left] + 1) ||
+            (@page.to_i == @options[:current_page] + @options[:window] + 1) && (@page.to_i == @options[:total_pages] - @options[:right])
         end
 
         # The last rendered tag was "truncated" or not
